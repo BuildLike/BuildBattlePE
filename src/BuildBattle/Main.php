@@ -6,13 +6,13 @@ use pocketmine\plugin\PluginBase;
 
 use pocketmine\utils\Config;
 
-use BuildBattle\Commands\BBCommand;
+use BuildBattle\commands\BBCommand;
 
-use BuildBattle\Events\CreateBuildZones;
-use BuildBattle\Events\JoinSign;
+use BuildBattle\events\CreateBuildZones;
+use BuildBattle\events\JoinSign;
 
-//use BuildBattle\Tasks\LobbyTimerTask;
-//use BuildBattle\Tasks\GameTimerTask;
+use BuildBattle\tasks\LobbyTimerTask;
+use BuildBattle\tasks\GameTimerTask;
 
 class Main extends PluginBase {
 
@@ -31,7 +31,7 @@ class Main extends PluginBase {
     $this->loadArenas();
     $this->registerEvents();
     $this->registerCommands();
-    //$this->registerTasks();
+    $this->registerTasks();
     $this->getLogger()->info("§a[BuildBattle] Everything loaded.");
   }
 

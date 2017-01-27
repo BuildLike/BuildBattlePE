@@ -1,6 +1,6 @@
 <?php
 
-namespace RRBuildBattle\Tasks;
+namespace BuildBattle\tasks;
 
 use pocketmine\scheduler\PluginTask;
 use pocketmine\plugin\Plugin;
@@ -21,11 +21,12 @@ class LobbyTimerTask extends PluginTask {
   public $theme;
 
   public function __construct(Main $plugin) {
+    parent::__construct($plugin);
     $this->plugin = $plugin;
   }
 
   public function onRun($tick) {
-    $config = new Config($this->plugin->getDataFolder() . "config.json", Config::JSON);
+    $config = new Config($this->plugin->getDataFolder() . "arenas.json", Config::JSON);
     $arenas = $config->get("arenas");
     if(!(empty($arenas))) {
       foreach($arenas[0] as $arena => $data) {
