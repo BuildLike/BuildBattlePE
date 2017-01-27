@@ -1,0 +1,10 @@
+name: BuildBattle
+version: 1.0.0-b
+author: SpopovabgS
+api: [2.0.0, 2.1.0, 3.0.0-ALPHA1]
+main: BuildBattle\Main
+commands:
+ join:
+    description: Join a random BuildBattle match.
+ bb:
+    description: BuildBattle setup command.
