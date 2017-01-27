@@ -1,6 +1,6 @@
 <?php
 
-namespace BuildBattle\Events;
+namespace BuildBattle\events;
 
 use pocketmine\plugin\PluginBase;
 use pocketmine\plugin\Plugin;
@@ -27,8 +27,8 @@ use BuildBattle\Main;
 
 class JoinSign extends PluginBase implements Listener {
 
-  public $players = [];
-  public $buildzone = "";
+  private $players = [];
+  private $buildzone = "";
 
   private $plugin;
 
@@ -37,7 +37,7 @@ class JoinSign extends PluginBase implements Listener {
   }
 
   public function onInteract(PlayerInteractEvent $event) {
-    $config = new Config($this->plugin->getDataFolder() . "config.json", Config::JSON);
+    $config = new Config($this->plugin->getDataFolder() . "arenas.json", Config::JSON);
     $player = $event->getPlayer();
     $name = $player->getName();
     $block = $event->getBlock();
@@ -47,7 +47,6 @@ class JoinSign extends PluginBase implements Listener {
         $text = $tile->getText();
         $tile->setText($this->plugin->prefix, "§l§2|| §aJoin §2||", "§b0§8/§b16", $this->plugin->currentArena);
         $this->plugin->mode = 0;
-
         unset($this->plugin->currentArena);
         unset($this->plugin->currentLobby);
       }
@@ -61,9 +60,7 @@ class JoinSign extends PluginBase implements Listener {
 
             $this->plugin->getServer()->loadLevel($lobby);
             $waitroom = $this->plugin->getServer()->getLevelByName($lobby);
-
-            $player->sendMessage("Joining BuildBattle game on map " . $text[3] . "..");
-
+            $player->sendMessage("Joining BuildBattle game on map " . $text[3] . "...");
             if(count($waitroom->getPlayers()) < 1) {
               $arenas[0][$text[3]]["waittime"] = 30;
               $arenas[0][$text[3]]["gametime"] = 30;
@@ -71,12 +68,9 @@ class JoinSign extends PluginBase implements Listener {
               $config->set("arenas", $arenas);
               $config->save();
             }
-
             $player->teleport($waitroom->getSafeSpawn(), 0, 0);
-            $player->teleport(new Vector3(128, 5, 128));
-
+            $player->teleport(new Vector3(128, 5, 128)); //replace with actual position
             $this->players = $arenas[0][$text[3]]["players"];
-
             $levelplayers = $waitroom->getPlayers();
             $count = count($levelplayers);
             foreach($levelplayers as $pl) {
@@ -84,7 +78,7 @@ class JoinSign extends PluginBase implements Listener {
               $names = $pl->getName();
               array_push($this->players, $names);
             }
-            $arenas[0][$text[3]]["players"] = array();
+            $arenas[0][$text[3]]["players"] = [];
             array_push($arenas[0][$text[3]]["players"], $this->players);
             $config->set("arenas", $arenas);
             $config->save();

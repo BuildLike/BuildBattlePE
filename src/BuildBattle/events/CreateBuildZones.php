@@ -1,6 +1,6 @@
 <?php
 
-namespace BuildBattle\vents;
+namespace BuildBattle\events;
 
 use pocketmine\plugin\PluginBase;
 
@@ -53,12 +53,13 @@ class CreateBuildZones extends PluginBase implements Listener {
             $this->arena[$currentArena]["waitlobby"] = "";
           }
           if($this->plugin->mode < 25) {
-            $this->arena[$currentArena]["buildzone" . $this->buildzone] = array();
+            $this->arena[$currentArena]["buildzone" . $this->buildzone] = [];
             $this->arena[$currentArena]["buildzone" . $this->buildzone]["builder"] = "";
             $this->arena[$currentArena]["buildzone" . $this->buildzone]["center"] = "";
           }
           array_push($this->arena[$currentArena]["buildzone" . $this->buildzone], $lowpos);
           $this->plugin->mode++;
+          $player->sendMessage($this->plugin->prefix . " §dTap to set Build Zone §5" . $this->buildzone . " upper position.");
         } elseif(in_array($this->plugin->mode, $second)) {
           $uppos = [
             "x2" => $x,
@@ -69,12 +70,16 @@ class CreateBuildZones extends PluginBase implements Listener {
           $this->plugin->mode++;
           $player->sendMessage($this->plugin->prefix . " §dTap to set Build Zone §5" . $this->buildzone . " §dcenter.");
         } elseif($this->plugin->mode % 3 == 0) {
-          $center = array("x" => $x, "y" => $y, "z" => $z);
+          $center = [
+            "x" => $x,
+            "y" => $y,
+            "z" => $z
+          ];
           $this->arena[$currentArena]["buildzone" . $this->buildzone]["center"] = $center;
           $this->plugin->mode++;
           $this->buildzone++;
-          if($this->buildzone < 9) {
-            $player->sendMessage($this->plugin->prefix . " §dTap to set Build Zone §5" . $this->buildzone);
+          if($this->buildzone < 9) { //bug fix
+            $player->sendMessage($this->plugin->prefix . " §dTap to set Build Zone §5" . $this->buildzone . " lower position.");
           }
         }
       } elseif($this->plugin->mode == 25) {
