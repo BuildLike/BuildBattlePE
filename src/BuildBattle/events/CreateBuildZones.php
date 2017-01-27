@@ -67,7 +67,7 @@ class CreateBuildZones extends PluginBase implements Listener {
           array_push($this->arena[$current_arena]["buildzone" . $this->buildzone], $uppos);
           $this->plugin->mode++;
           $player->sendMessage($this->plugin->prefix . " §dTap to set Build Zone §5" . $this->buildzone . " §dcenter");
-        } elseif($this->plugin->mode % 3 == 0) { //if the remainder is 0 it can be divided by 3
+        } elseif($this->plugin->mode % 3 == 0) {
           $center = array("x" => $x, "y" => $y, "z" => $z);
           $this->arena[$current_arena]["buildzone" . $this->buildzone]["center"] = $center;
           $this->plugin->mode++;
@@ -84,7 +84,7 @@ class CreateBuildZones extends PluginBase implements Listener {
         } else {
           $player->sendMessage($this->plugin->prefix . " §4ERROR: §cARENA EXISTS");
         }
-      } elseif($this->plugin->mode == (25 + 1)) {
+      } elseif($this->plugin->mode == 26) {
         $this->plugin->currentArena = $current_arena;
         $this->plugin->getServer()->loadLevel($this->plugin->currentLobby);
         $lobby = $this->plugin->getServer()->getLevelByName($this->plugin->currentLobby);
@@ -103,7 +103,7 @@ class CreateBuildZones extends PluginBase implements Listener {
 
   public function onChat(PlayerChatEvent $event) {
     $player = $event->getPlayer();
-    if($this->plugin->mode == (25 + 1)) {
+    if($this->plugin->mode == 26) {
       $this->plugin->currentLobby = $event->getMessage();
       $player->sendMessage($this->plugin->prefix . " §9Tap to set waitroom coordinates");
     }
@@ -111,7 +111,7 @@ class CreateBuildZones extends PluginBase implements Listener {
 
   public function arenaExists(string $arena) {
     $config = new Config($this->plugin->getDataFolder() . "config.json", Config::JSON);
-    if(!(empty($config->get("arenas")[0][$arena]))) {
+    if(!empty($config->get("arenas")[$arena])) {
       return true;
     } else {
       return false;
