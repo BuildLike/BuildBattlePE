@@ -28,18 +28,16 @@ class GameTimerTask extends PluginTask {
   public function onRun($tick) {
     $config = new Config($this->plugin->getDataFolder() . "arenas.json", Config::JSON);
     $arenas = $config->get("arenas");
-    if(!(empty($arenas))) {
+    if(!empty($arenas)) {
       foreach($arenas[0] as $arena => $data) {
         $gamearena = $this->plugin->getServer()->getLevelByName($arena);
         $levelplayers = $gamearena->getPlayers();
         $count = count($levelplayers);
-
-        $waittime = $arenas[0][$arena]["waittime"];
-        $gametime = $arenas[0][$arena]["gametime"];
+        $waittime = $arenas[0][$arena]["waittimer"];
+        $gametime = $arenas[0][$arena]["gametimer"];
         $status = $arenas[0][$arena]["status"];
         $vote = $arenas[0][$arena]["votetimer"];
-
-        if($status == "ingame") {
+        if($status === "ingame") {
           if($count >= 2) {
             if($gametime > 0) {
               $gametime--;

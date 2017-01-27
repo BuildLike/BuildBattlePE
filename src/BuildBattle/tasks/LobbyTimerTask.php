@@ -34,10 +34,8 @@ class LobbyTimerTask extends PluginTask {
         $waitroom = $this->plugin->getServer()->getLevelByName($lobby);
         $levelplayers = $waitroom->getPlayers();
         $count = count($levelplayers);
-
-        $waittime = $arenas[0][$arena]["waittime"];
+        $waittime = $arenas[0][$arena]["waittimer"];
         $status = $arenas[0][$arena]["status"];
-
         if($status == "waiting") {
           if($count >= 2) {
             if($waittime > 0) {

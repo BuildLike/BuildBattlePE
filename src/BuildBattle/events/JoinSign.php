@@ -49,27 +49,27 @@ class JoinSign extends PluginBase implements Listener {
         $this->plugin->mode = 0;
         unset($this->plugin->currentArena);
         unset($this->plugin->currentLobby);
+      } else {
+        $player->sendMessage($this->plugin->prefix . " §cPlease tap a sign.");
+        return;
       }
     } else {
       if($tile instanceof Sign) {
         $text = $tile->getText();
-        if($text[0] == $this->plugin->prefix) {
-          if($text[1] == "§l§2|| §aJoin §2||") {
+        if($text[0] === $this->plugin->prefix) {
+          if($text[1] === "§l§2|| §aJoin §2||") {
             $arenas = $config->get("arenas");
+            $arenas[0][$text[3]]["status"] = "ingame"; //testing
             $lobby = $arenas[0][$text[3]]["waitlobby"];
-
             $this->plugin->getServer()->loadLevel($lobby);
             $waitroom = $this->plugin->getServer()->getLevelByName($lobby);
-            $player->sendMessage("Joining BuildBattle game on map " . $text[3] . "...");
+            $player->sendMessage($this->plugin->prefix . " §6Joining BuildBattle game on map §e" . $text[3] . "§6...");
             if(count($waitroom->getPlayers()) < 1) {
-              $arenas[0][$text[3]]["waittime"] = 30;
-              $arenas[0][$text[3]]["gametime"] = 30;
+              $arenas[0][$text[3]]["waittimer"] = 60;
+              $arenas[0][$text[3]]["gametimer"] = 120;
               $arenas[0][$text[3]]["status"] = "waiting";
-              $config->set("arenas", $arenas);
-              $config->save();
             }
-            $player->teleport($waitroom->getSafeSpawn(), 0, 0);
-            $player->teleport(new Vector3(128, 5, 128)); //replace with actual position
+            $player->teleport(new Position(128, 128, 128, $waitroom)); //change to real coords
             $this->players = $arenas[0][$text[3]]["players"];
             $levelplayers = $waitroom->getPlayers();
             $count = count($levelplayers);

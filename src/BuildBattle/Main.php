@@ -28,7 +28,7 @@ class Main extends PluginBase {
   public function onEnable() {
     $this->getLogger()->info("§b[BuildBattle] Loading...");
     $this->initializeConfig();
-    $this->loadArenas();
+    //$this->loadArenas(); TODO fix
     $this->registerEvents();
     $this->registerCommands();
     $this->registerTasks();
@@ -52,7 +52,7 @@ class Main extends PluginBase {
       foreach($arenas as $key => $arena) {
         if($arena !== null) {
           $this->getServer()->loadLevel($arena);
-          $lobby = $arenas[$key]["waitlobby"];
+          $lobby = $arenas[0][$key]["waitlobby"];
           $this->getServer()->loadLevel($lobby);
         }
       }
