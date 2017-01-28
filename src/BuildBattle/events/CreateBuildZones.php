@@ -93,9 +93,9 @@ class CreateBuildZones extends PluginBase implements Listener {
         ];
         $this->arena[$this->plugin->currentArena]["waitroompos"] = $waitroompos;
         $this->arena[$this->plugin->currentArena]["waitroomworld"] = $this->plugin->currentLobby;
-        $this->arena[$this->plugin->currentArena]["waittime"] = 60;
-        $this->arena[$this->plugin->currentArena]["gametime"] = 120;
-        $this->arena[$this->plugin->currentArena]["votetime"] = 30;
+        $this->arena[$this->plugin->currentArena]["waittime"] = 61;
+        $this->arena[$this->plugin->currentArena]["gametime"] = 121;
+        $this->arena[$this->plugin->currentArena]["votetime"] = 31;
         $this->arena[$this->plugin->currentArena]["status"] = "empty";
         array_push($this->plugin->arenas, $this->arena);
         $config->set("arenas", $this->plugin->arenas);

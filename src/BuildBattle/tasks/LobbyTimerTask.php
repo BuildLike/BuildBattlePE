@@ -18,7 +18,7 @@ use BuildBattle\Main;
 
 class LobbyTimerTask extends PluginTask {
 
-  public $theme;
+  private $plugin;
 
   public function __construct(Main $plugin) {
     parent::__construct($plugin);
@@ -26,17 +26,17 @@ class LobbyTimerTask extends PluginTask {
   }
 
   public function onRun($tick) {
-    /*$config = new Config($this->plugin->getDataFolder() . "arenas.json", Config::JSON);
+    $config = new Config($this->plugin->getDataFolder() . "arenas.json", Config::JSON);
     $arenas = $config->get("arenas");
-    if(!(empty($arenas))) {
+    if(!empty($config->getAll())) {
       foreach($arenas[0] as $arena => $data) {
-        $lobby = $arenas[0][$arena]["waitlobby"];
+        $lobby = $arenas[0][$arena]["waitroomworld"];
         $waitroom = $this->plugin->getServer()->getLevelByName($lobby);
-        $levelplayers = $waitroom->getPlayers();
-        $count = count($levelplayers);
-        $waittime = $arenas[0][$arena]["waittimer"];
+        $players = $waitroom->getPlayers();
+        $count = count($players);
+        $waittime = $arenas[0][$arena]["waittime"];
         $status = $arenas[0][$arena]["status"];
-        if($status == "waiting") {
+        if($status === "waiting") {
           if($count >= 2) {
             if($waittime > 0) {
               $waittime--;
@@ -46,12 +46,13 @@ class LobbyTimerTask extends PluginTask {
             }
           }
 
+          /* TODO
           if(!(isset($this->theme))) {
             shuffle($this->plugin->themes);
             $this->theme = $this->plugin->themes[0];
-          }
+          }*/
 
-          foreach($levelplayers as $player) {
+          foreach($players as $player) {
             if($count >= 2) {
               if($waittime > 0) {
                 if($waittime % 60 == 0 && $waittimw != 60) {
@@ -93,6 +94,6 @@ class LobbyTimerTask extends PluginTask {
           }
         }
       }
-    }*/
+    }
   }
 }

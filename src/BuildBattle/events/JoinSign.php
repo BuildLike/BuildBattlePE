@@ -2,12 +2,9 @@
 
 namespace BuildBattle\events;
 
-use pocketmine\plugin\PluginBase;
-use pocketmine\plugin\Plugin;
-use pocketmine\event\Listener;
+use pocketmine\scheduler\PluginTask;
 
-use pocketmine\Server;
-use pocketmine\Player;
+use pocketmine\event\Listener;
 
 use pocketmine\utils\Config;
 
@@ -23,9 +20,10 @@ use pocketmine\block\Block;
 use pocketmine\tile\Sign;
 
 use BuildBattle\Tasks\LobbyTimerTask;
+
 use BuildBattle\Main;
 
-class JoinSign extends PluginBase implements Listener {
+class JoinSign implements Listener {
 
   private $players = [];
   private $buildzone = "";
@@ -66,16 +64,19 @@ class JoinSign extends PluginBase implements Listener {
             $waitroom = $this->plugin->getServer()->getLevelByName($lobby);
             $player->sendMessage($this->plugin->prefix . " §6Joining BuildBattle game on map §e" . $text[3] . "§6...");
             if(count($waitroom->getPlayers()) < 1) {
-              $arenas[0][$text[3]]["waittime"] = 60;
-              $arenas[0][$text[3]]["gametime"] = 120;
+              $arenas[0][$text[3]]["waittime"] = 61;
+              $arenas[0][$text[3]]["gametime"] = 121;
               $arenas[0][$text[3]]["status"] = "waiting";
+              $config->set("arenas", $arenas);
+              $config->save();
+            } else {
+              $this->plugin->getServer()->getScheduler()->scheduleRepeatingTask(new LobbyTimerTask($this->plugin), 20);
             }
-            $player->teleport(new Position(128, 128, 128, $waitroom)); //change to real coords
-            $this->players = $arenas[0][$text[3]]["players"];
+            $player->teleport(new Position($arenas[0][$text[3]]["waitroompos"]["x"], $arenas[0][$text[3]]["waitroompos"]["y"], $arenas[0][$text[3]]["waitroompos"]["z"], $waitroom));
             $levelplayers = $waitroom->getPlayers();
             $count = count($levelplayers);
             foreach($levelplayers as $pl) {
-              $pl->sendMessage($this->plugin->prefix . " §c" . $name . " §ejoined the game §8[§b" . $count . "§7/§b8§8]");
+              $pl->sendMessage($this->plugin->prefix . " §c" . $name . " §ejoined the game §8[§b" . $count . "§7/§b16§8]");
               $names = $pl->getName();
               array_push($this->players, $names);
             }

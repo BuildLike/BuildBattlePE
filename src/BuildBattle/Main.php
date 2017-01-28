@@ -31,7 +31,6 @@ class Main extends PluginBase {
     $this->loadArenas();
     $this->registerEvents();
     $this->registerCommands();
-    $this->registerTasks();
     $this->getLogger()->info("§a[BuildBattle] Everything loaded.");
   }
 
@@ -71,10 +70,5 @@ class Main extends PluginBase {
 
   private function registerCommands() {
     $this->getCommand("bb")->setExecutor(new BBCommand($this), $this);
-  }
-
-  private function registerTasks() {
-    $this->getServer()->getScheduler()->scheduleRepeatingTask(new LobbyTimerTask($this), 20);
-    $this->getServer()->getScheduler()->scheduleRepeatingTask(new GameTimerTask($this), 20);
   }
 }
