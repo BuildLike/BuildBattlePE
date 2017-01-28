@@ -18,7 +18,7 @@ use BuildBattle\Main;
 
 class GameTimerTask extends PluginTask {
 
-  public $buildzone;
+  private $buildzone;
 
   public function __construct(Main $plugin) {
     parent::__construct($plugin);
@@ -33,10 +33,10 @@ class GameTimerTask extends PluginTask {
         $gamearena = $this->plugin->getServer()->getLevelByName($arena);
         $levelplayers = $gamearena->getPlayers();
         $count = count($levelplayers);
-        $waittime = $arenas[0][$arena]["waittimer"];
-        $gametime = $arenas[0][$arena]["gametimer"];
+        $waittime = $arenas[0][$arena]["waittime"];
+        $gametime = $arenas[0][$arena]["gametime"];
         $status = $arenas[0][$arena]["status"];
-        $vote = $arenas[0][$arena]["votetimer"];
+        $vote = $arenas[0][$arena]["votetime"];
         if($status === "ingame") {
           if($count >= 2) {
             if($gametime > 0) {

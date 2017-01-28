@@ -34,7 +34,6 @@ class CreateBuildZones extends PluginBase implements Listener {
     $x = $block->getX();
     $y = $block->getY();
     $z = $block->getZ();
-    $currentArena = $player->getLevel()->getFolderName();
     if($this->plugin->mode > 0) {
       if($this->plugin->mode < 25) {
         // TODO find a better method for this
@@ -46,27 +45,23 @@ class CreateBuildZones extends PluginBase implements Listener {
             "y1" => $y,
             "z1" => $z
           ];
-          if($this->plugin->mode == 1) {
-            $this->arena[$currentArena]["players"] = [];
-            $this->arena[$currentArena]["status"] = "";
-            $this->arena[$currentArena]["waitroom"] = "";
-            $this->arena[$currentArena]["waitlobby"] = "";
-          }
+          if($this->plugin->mode == 1)
+            $this->arena[$this->plugin->currentArena]["players"] = [];
           if($this->plugin->mode < 25) {
-            $this->arena[$currentArena]["buildzone" . $this->buildzone] = [];
-            $this->arena[$currentArena]["buildzone" . $this->buildzone]["builder"] = "";
-            $this->arena[$currentArena]["buildzone" . $this->buildzone]["center"] = "";
+            $this->arena[$this->plugin->currentArena]["buildzone" . $this->buildzone] = [];
+            $this->arena[$this->plugin->currentArena]["buildzone" . $this->buildzone]["builder"] = "";
+            $this->arena[$this->plugin->currentArena]["buildzone" . $this->buildzone]["center"] = [];
           }
-          array_push($this->arena[$currentArena]["buildzone" . $this->buildzone], $lowpos);
+          array_push($this->arena[$this->plugin->currentArena]["buildzone" . $this->buildzone], $lowpos);
           $this->plugin->mode++;
-          $player->sendMessage($this->plugin->prefix . " §dTap to set Build Zone §5" . $this->buildzone . " upper position.");
+          $player->sendMessage($this->plugin->prefix . " §dTap to set Build Zone §5" . $this->buildzone . " §dupper position.");
         } elseif(in_array($this->plugin->mode, $second)) {
           $uppos = [
             "x2" => $x,
             "y2" => $y,
             "z2" => $z
           ];
-          array_push($this->arena[$currentArena]["buildzone" . $this->buildzone], $uppos);
+          array_push($this->arena[$this->plugin->currentArena]["buildzone" . $this->buildzone], $uppos);
           $this->plugin->mode++;
           $player->sendMessage($this->plugin->prefix . " §dTap to set Build Zone §5" . $this->buildzone . " §dcenter.");
         } elseif($this->plugin->mode % 3 == 0) {
@@ -75,36 +70,32 @@ class CreateBuildZones extends PluginBase implements Listener {
             "y" => $y,
             "z" => $z
           ];
-          $this->arena[$currentArena]["buildzone" . $this->buildzone]["center"] = $center;
+          $this->arena[$this->plugin->currentArena]["buildzone" . $this->buildzone]["center"] = $center;
           $this->plugin->mode++;
           $this->buildzone++;
           if($this->buildzone < 9) { //bug fix
-            $player->sendMessage($this->plugin->prefix . " §dTap to set Build Zone §5" . $this->buildzone . " lower position.");
+            $player->sendMessage($this->plugin->prefix . " §dTap to set Build Zone §5" . $this->buildzone . " §dlower position.");
           }
         }
       } elseif($this->plugin->mode == 25) {
         unset($this->buildzone);
-        if(!$this->arenaExists($currentArena)) {
+        if(!$this->arenaExists($this->plugin->currentArena)) {
           $this->plugin->mode++;
-          $player->sendMessage($this->plugin->prefix . " §aBuild Zones registered. Type the world name of the wait lobby for " . $currentArena . ".");
+          $player->sendMessage($this->plugin->prefix . " §aBuild Zones registered. Type in the world name of the wait lobby for " . $this->plugin->currentArena . ".");
         } else {
           $player->sendMessage($this->plugin->prefix . " §cArena already exists!");
         }
-      } elseif($this->plugin->mode == 26) {
-        $this->plugin->currentArena = $currentArena;
-        $this->plugin->getServer()->loadLevel($this->plugin->currentLobby);
-        $lobby = $this->plugin->getServer()->getLevelByName($this->plugin->currentLobby);
-        $player->teleport($lobby->getSafeSpawn(), 0, 0);
+      } elseif($this->plugin->mode == 27) {
         $waitroompos = [
           "x" => $x,
           "y" => $y,
           "z" => $z
         ];
-        $this->arena[$this->plugin->currentArena]["waitroom"] = $waitroompos;
-        $this->arena[$this->plugin->currentArena]["waitlobby"] = $this->plugin->currentLobby;
-        $this->arena[$this->plugin->currentArena]["waittimer"] = 60;
-        $this->arena[$this->plugin->currentArena]["gametimer"] = 120;
-        $this->arena[$this->plugin->currentArena]["votetimer"] = 30;
+        $this->arena[$this->plugin->currentArena]["waitroompos"] = $waitroompos;
+        $this->arena[$this->plugin->currentArena]["waitroomworld"] = $this->plugin->currentLobby;
+        $this->arena[$this->plugin->currentArena]["waittime"] = 60;
+        $this->arena[$this->plugin->currentArena]["gametime"] = 120;
+        $this->arena[$this->plugin->currentArena]["votetime"] = 30;
         $this->arena[$this->plugin->currentArena]["status"] = "empty";
         array_push($this->plugin->arenas, $this->arena);
         $config->set("arenas", $this->plugin->arenas);
@@ -119,13 +110,17 @@ class CreateBuildZones extends PluginBase implements Listener {
     $player = $event->getPlayer();
     if($this->plugin->mode == 26) {
       $this->plugin->currentLobby = $event->getMessage();
+      $this->plugin->getServer()->loadLevel($this->plugin->currentLobby);
+      $lobby = $this->plugin->getServer()->getLevelByName($this->plugin->currentLobby);
+      $player->teleport($lobby->getSafeSpawn());
+      $this->plugin->mode++;
       $player->sendMessage($this->plugin->prefix . " §9Tap to set waitroom coordinates.");
     }
   }
 
   public function arenaExists(string $arena) {
     $config = new Config($this->plugin->getDataFolder() . "arenas.json", Config::JSON);
-    if(!empty($config->get("arenas")[$arena])) {
+    if($config->get("arenas")[0][$arena]) {
       return true;
     } else {
       return false;

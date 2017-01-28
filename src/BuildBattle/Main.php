@@ -28,7 +28,7 @@ class Main extends PluginBase {
   public function onEnable() {
     $this->getLogger()->info("§b[BuildBattle] Loading...");
     $this->initializeConfig();
-    //$this->loadArenas(); TODO fix
+    $this->loadArenas();
     $this->registerEvents();
     $this->registerCommands();
     $this->registerTasks();
@@ -38,7 +38,12 @@ class Main extends PluginBase {
   private function initializeConfig() {
     @mkdir($this->getDataFolder());
     if(!file_exists($this->getDataFolder() . "config.yml")) {
-      $config = new Config($this->getDataFolder() . "config.yml", Config::YAML);
+      $config = new Config($this->getDataFolder() . "config.yml", Config::YAML, [
+        "gameTime" => 120,
+        "waitTime" => 60,
+        "loadArenasOnServerStartup" => true,
+        "playersPerGame" => 16
+      ]);
     }
     if(!file_exists($this->getDataFolder() . "temp_match_data.json")) {
       $temp = new Config($this->getDataFolder() . "temp_match_data.json", Config::JSON);
@@ -49,10 +54,10 @@ class Main extends PluginBase {
     $config = new Config($this->getDataFolder() . "arenas.json", Config::JSON);
     $arenas = $config->get("arenas");
     if($arenas !== null && !empty($arenas)) {
-      foreach($arenas as $key => $arena) {
+      foreach($arenas[0] as $arena => $data) {
         if($arena !== null) {
           $this->getServer()->loadLevel($arena);
-          $lobby = $arenas[0][$key]["waitlobby"];
+          $lobby = $arenas[0][$arena]["waitroomworld"];
           $this->getServer()->loadLevel($lobby);
         }
       }

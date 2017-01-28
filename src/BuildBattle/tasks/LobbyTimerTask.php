@@ -26,7 +26,7 @@ class LobbyTimerTask extends PluginTask {
   }
 
   public function onRun($tick) {
-    $config = new Config($this->plugin->getDataFolder() . "arenas.json", Config::JSON);
+    /*$config = new Config($this->plugin->getDataFolder() . "arenas.json", Config::JSON);
     $arenas = $config->get("arenas");
     if(!(empty($arenas))) {
       foreach($arenas[0] as $arena => $data) {
@@ -93,6 +93,6 @@ class LobbyTimerTask extends PluginTask {
           }
         }
       }
-    }
+    }*/
   }
 }
