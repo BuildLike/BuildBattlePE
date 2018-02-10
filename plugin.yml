@@ -1,7 +1,7 @@
 name: BuildBattle
-version: 1.0.0-b
+version: 2.0.0-N
 author: SpopovabgS
-api: [2.0.0, 2.1.0, 3.0.0-ALPHA1]
+api: [3.0.0-ALPHA11]
 main: BuildBattle\Main
 commands:
  join:
