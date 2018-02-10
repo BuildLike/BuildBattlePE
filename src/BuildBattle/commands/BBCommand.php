@@ -22,7 +22,7 @@ class BBCommand extends PluginBase {
     $this->plugin = $plugin;
     }
 
-    public function onCommand(CommandSender $sender, Command $command, $label, array $args) {
+    public function onCommand(CommandSender $sender, Command $command, $label, array $args) : bool {
         if($command->getName() == "bb") {
             if(!isset($args[0]) return false;
             if($args[0] == "create") {
